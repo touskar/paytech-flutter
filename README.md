@@ -61,8 +61,11 @@ You can pass optional additional arguments to PayTech constructor:
 
 ## Author
 
-PayTech, contact@paytech.sn
+Moussa Ndour (moussa.ndour@intech.sn / +221772457199)
+contact@paytech.sn
+https://intech.sn
+https://paytech.sn
 
 ## License
 
-Paytech is available under the MIT license. See the LICENSE file for more info.
+PayTech is available under the MIT license. See the LICENSE file for more info.
