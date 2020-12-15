@@ -9,7 +9,7 @@ it, simply add the following line to your pubspec.yam;:
 
 ```yaml
 dependencies:
-  paytech: ^1.0.0
+  paytech: ^0.0.1
 ```
 
 ## Example
@@ -23,29 +23,31 @@ Import Paytech Module
 
 Use `Paytech`  widget to make a payment.
 ```dart
-var paymentUrl = "https://paytech.sn/payment/checkout/729b3e3021226cd27905";
+onPressed: () async{
+  var paymentUrl = "https://paytech.sn/payment/checkout/729b3e3021226cd27905";
 
-bool paymentResult = await Navigator.push(
-  context,
+  bool paymentResult = await Navigator.push(
+    context,
   MaterialPageRoute(builder: (context) => PayTech(paymentUrl)),
-);
+  );
 
-if(paymentResult){
-  Scaffold.of(context).showSnackBar(new SnackBar(
-      content: Text("Payment success")
-  ));
-}
-else{
-  Scaffold.of(context).showSnackBar(new SnackBar(
-      content: Text("Payment failed")
-  ));
-}
+ if(paymentResult){
+    Scaffold.of(context).showSnackBar(new SnackBar(
+        content: Text("Payment success")
+    ));
+  }
+  else{
+    Scaffold.of(context).showSnackBar(new SnackBar(
+        content: Text("Payment failed")
+    ));
+  }
+},
 ```
 
 
-## Paytech Widget
+## PayTech Widget
 
-You can pass optional additional arguments to PayTech Widget:
+You can pass optional additional arguments to PayTech constructor:
 ```dart
 {
   backButtonIcon: IconData, default Icons.arrow_back_ios

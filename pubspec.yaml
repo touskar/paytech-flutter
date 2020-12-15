@@ -1,7 +1,6 @@
 name: paytech
 description: Paytech SDK for flutter
-version: 1.0.0
-author: Paytech
+version: 0.0.1
 homepage: https://github.com/touskar/paytech-flutter
 
 environment:
