@@ -38,8 +38,8 @@ class _PayTechState extends State<PayTech> {
     super.initState();
 
     if(widget.hideAppBar){
-      WidgetsFlutterBinding.ensureInitialized();
-      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+     // WidgetsFlutterBinding.ensureInitialized();
+       FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
     }
 
   }
@@ -105,8 +105,9 @@ class _PayTechState extends State<PayTech> {
       onClosing  = true;
       flutterWebviewPlugin?.close();
       Navigator.of(context).pop(success);
-      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-      //await FullScreen.exitFullScreen();
+      await FullScreen.exitFullScreen();
+
+
     }
 
     //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
