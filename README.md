@@ -9,7 +9,7 @@ it, simply add the following line to your pubspec.yam;:
 
 ```yaml
 dependencies:
-  paytech: ^0.0.1
+  paytech: ^0.0.2
 ```
 
 ## Example
@@ -54,7 +54,8 @@ You can pass optional additional arguments to PayTech constructor:
   appBarTitle: String, default "PayTech"
   centerTitle: bool, default true
   appBarBgColor: Color,  default Color(0xFF1b7b80)
-  appBarTextStyle: TextStyle,  default TextStyle()
+  appBarTextStyle: TextStyle,  default TextStyle(),
+  hideAppBar: bool, default false
 }
 ```
 

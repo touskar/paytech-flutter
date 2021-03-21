@@ -17,8 +17,9 @@ class PayTech extends StatefulWidget {
   final Color appBarBgColor;
   final TextStyle appBarTextStyle;
   final IconData backButtonIcon;
+  final bool hideAppBar;
 
-  PayTech(this.paymentUrl, {this.backButtonIcon = Icons.arrow_back_ios, this.appBarTitle = "PayTech", this.centerTitle = true, this.appBarBgColor = const Color(0xFF1b7b80), this.appBarTextStyle = const TextStyle()});
+  PayTech(this.paymentUrl, {this.hideAppBar = false, this.backButtonIcon = Icons.arrow_back_ios, this.appBarTitle = "PayTech", this.centerTitle = true, this.appBarBgColor = const Color(0xFF1b7b80), this.appBarTextStyle = const TextStyle()});
 
   @override
   _PayTechState createState() => _PayTechState();
@@ -46,7 +47,7 @@ class _PayTechState extends State<PayTech> {
       javascriptChannels:
           <JavascriptChannel>[_openDialJavascriptChannel(context)].toSet(),
       debuggingEnabled: Platform.isAndroid && !kReleaseMode ? true : false,
-      appBar: new AppBar(
+      appBar: widget.hideAppBar ? null :  AppBar(
         title: new Text(
             widget.appBarTitle,
           style: widget.appBarTextStyle,
