@@ -36,13 +36,18 @@ class _PayTechState extends State<PayTech> {
 
     if(widget.hideAppBar){
       WidgetsFlutterBinding.ensureInitialized();
-      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+      SystemChrome.setEnabledSystemUIOverlays([]);
     }
 
   }
 
   @override
   Widget build(BuildContext context) {
+    if(widget.hideAppBar){
+      WidgetsFlutterBinding.ensureInitialized();
+      SystemChrome.setEnabledSystemUIOverlays([]);
+    }
+
     return new WebviewScaffold(
       url: widget.paymentUrl,
       hidden: false,
