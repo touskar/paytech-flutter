@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:fullscreen/fullscreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const MOBILE_CANCEL_URL = "https://paytech.sn/mobile/cancel";
@@ -29,6 +30,8 @@ class PayTech extends StatefulWidget {
 class _PayTechState extends State<PayTech> {
   FlutterWebviewPlugin flutterWebviewPlugin;
 
+  bool onClosing = false;
+
   @override
   void initState() {
     _initcontroller();
@@ -36,17 +39,17 @@ class _PayTechState extends State<PayTech> {
 
     if(widget.hideAppBar){
       WidgetsFlutterBinding.ensureInitialized();
-      SystemChrome.setEnabledSystemUIOverlays([]);
+      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     }
 
   }
 
   @override
   Widget build(BuildContext context) {
-    if(widget.hideAppBar){
+    /*if(widget.hideAppBar){
       WidgetsFlutterBinding.ensureInitialized();
       SystemChrome.setEnabledSystemUIOverlays([]);
-    }
+    }*/
 
     return new WebviewScaffold(
       url: widget.paymentUrl,
@@ -79,8 +82,8 @@ class _PayTechState extends State<PayTech> {
 
   void _initcontroller() {
     flutterWebviewPlugin = new FlutterWebviewPlugin();
-
-    /*flutterWebviewPlugin.onUrlChanged.listen((String url) {
+/*
+   flutterWebviewPlugin.onUrlChanged.listen((String url) {
       if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
         bool result = url.contains("success") ? true : false;
         _close(result);
@@ -90,16 +93,23 @@ class _PayTechState extends State<PayTech> {
     flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
       String url = state.url;
       if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
+
         bool result = url.contains("success") ? true : false;
         _close(result);
       }
     });
   }
 
-  void _close(bool success) {
-    flutterWebviewPlugin?.close();
-    Navigator.of(context).pop(success);
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  void _close(bool success) async{
+    if(!onClosing){
+      onClosing  = true;
+      flutterWebviewPlugin?.close();
+      Navigator.of(context).pop(success);
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+      //await FullScreen.exitFullScreen();
+    }
+
+    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
   JavascriptChannel _openDialJavascriptChannel(BuildContext context) {
