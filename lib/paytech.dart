@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,6 +33,11 @@ class _PayTechState extends State<PayTech> {
   void initState() {
     _initcontroller();
     super.initState();
+
+    if(widget.hideAppBar){
+      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    }
+
   }
 
   @override
@@ -79,6 +85,7 @@ class _PayTechState extends State<PayTech> {
   void _close(bool success) {
     flutterWebviewPlugin?.close();
     Navigator.of(context).pop(success);
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
   JavascriptChannel _openDialJavascriptChannel(BuildContext context) {
