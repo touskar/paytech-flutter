@@ -89,13 +89,6 @@ class _PayTechState extends State<PayTech> {
 
   void _initcontroller() {
     flutterWebviewPlugin = new FlutterWebviewPlugin();
-/*
-   flutterWebviewPlugin.onUrlChanged.listen((String url) {
-      if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
-        bool result = url.contains("success") ? true : false;
-        _close(result);
-      }
-    });*/
 
     flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
       String url = state.url;
@@ -109,12 +102,10 @@ class _PayTechState extends State<PayTech> {
   void _close(bool success) async {
     if (!onClosing) {
       onClosing = true;
-      flutterWebviewPlugin?.close();
+      flutterWebviewPlugin.close();
       Navigator.of(context).pop(success);
       await FullScreen.exitFullScreen();
     }
-
-    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
   JavascriptChannel _openDialJavascriptChannel(BuildContext context) {
