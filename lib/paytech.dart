@@ -21,14 +21,20 @@ class PayTech extends StatefulWidget {
   final IconData backButtonIcon;
   final bool hideAppBar;
 
-  PayTech(this.paymentUrl, {this.hideAppBar = false, this.backButtonIcon = Icons.arrow_back_ios, this.appBarTitle = "PayTech", this.centerTitle = true, this.appBarBgColor = const Color(0xFF1b7b80), this.appBarTextStyle = const TextStyle()});
+  PayTech(this.paymentUrl,
+      {this.hideAppBar = false,
+      this.backButtonIcon = Icons.arrow_back_ios,
+      this.appBarTitle = "PayTech",
+      this.centerTitle = true,
+      this.appBarBgColor = const Color(0xFF1b7b80),
+      this.appBarTextStyle = const TextStyle()});
 
   @override
   _PayTechState createState() => _PayTechState();
 }
 
 class _PayTechState extends State<PayTech> {
-  FlutterWebviewPlugin flutterWebviewPlugin;
+  late FlutterWebviewPlugin flutterWebviewPlugin;
 
   bool onClosing = false;
 
@@ -37,11 +43,10 @@ class _PayTechState extends State<PayTech> {
     _initcontroller();
     super.initState();
 
-    if(widget.hideAppBar){
-     // WidgetsFlutterBinding.ensureInitialized();
-       FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
+    if (widget.hideAppBar) {
+      // WidgetsFlutterBinding.ensureInitialized();
+      FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
     }
-
   }
 
   @override
@@ -62,55 +67,45 @@ class _PayTechState extends State<PayTech> {
       javascriptChannels:
           <JavascriptChannel>[_openDialJavascriptChannel(context)].toSet(),
       debuggingEnabled: Platform.isAndroid && !kReleaseMode ? true : false,
-      appBar: widget.hideAppBar ? null :  AppBar(
-        title: new Text(
-            widget.appBarTitle,
-          style: widget.appBarTextStyle,
-        ),
-        backgroundColor: widget.appBarBgColor,
-        //backgroundColor: APP_PRIMARY_COLOR,
-        centerTitle: widget.centerTitle,
-        leading: IconButton(
-          icon: Icon(widget.backButtonIcon, color: Colors.white),
-          onPressed: () {
-            _close(false);
-          },
-        ),
-      ),
+      appBar: widget.hideAppBar
+          ? null
+          : AppBar(
+              title: new Text(
+                widget.appBarTitle,
+                style: widget.appBarTextStyle,
+              ),
+              backgroundColor: widget.appBarBgColor,
+              //backgroundColor: APP_PRIMARY_COLOR,
+              centerTitle: widget.centerTitle,
+              leading: IconButton(
+                icon: Icon(widget.backButtonIcon, color: Colors.white),
+                onPressed: () {
+                  _close(false);
+                },
+              ),
+            ),
     );
   }
 
   void _initcontroller() {
     flutterWebviewPlugin = new FlutterWebviewPlugin();
-/*
-   flutterWebviewPlugin.onUrlChanged.listen((String url) {
-      if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
-        bool result = url.contains("success") ? true : false;
-        _close(result);
-      }
-    });*/
 
     flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
       String url = state.url;
       if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
-
         bool result = url.contains("success") ? true : false;
         _close(result);
       }
     });
   }
 
-  void _close(bool success) async{
-    if(!onClosing){
-      onClosing  = true;
-      flutterWebviewPlugin?.close();
+  void _close(bool success) async {
+    if (!onClosing) {
+      onClosing = true;
+      flutterWebviewPlugin.close();
       Navigator.of(context).pop(success);
       await FullScreen.exitFullScreen();
-
-
     }
-
-    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
   JavascriptChannel _openDialJavascriptChannel(BuildContext context) {
