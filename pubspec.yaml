@@ -4,19 +4,20 @@ version: 0.1.2
 homepage: https://github.com/touskar/paytech-flutter
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.17.0 <2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  url_launcher: ^5.5.0
-  flutter_webview_plugin: ^0.3.11
+  url_launcher: ^6.0.17
+  flutter_webview_plugin: ^0.4.0
   fullscreen: ^1.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.17.12
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
