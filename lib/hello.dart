@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:paytech/paytech.dart';
@@ -18,10 +20,10 @@ class AppScreen extends StatelessWidget {
             onPressed: () async{
               var paymentUrl = "https://paytech.sn/payment/checkout/729b3e3021226cd27905";
 
-              bool paymentResult = await Navigator.push(
+              bool paymentResult = await (Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PayTech(paymentUrl)),
-              );
+              ) as FutureOr<bool>);
 
               if(paymentResult){
                 Scaffold.of(context).showSnackBar(new SnackBar(
