@@ -9,7 +9,7 @@ it, simply add the following line to your pubspec.yam;:
 
 ```yaml
 dependencies:
-  paytech: ^2.0.0 #null-safety
+  paytech: ^2.0.1 #null-safety
 ```
 
 ```yaml
@@ -31,10 +31,10 @@ Use `Paytech`  widget to make a payment.
 onPressed: () async{
   var paymentUrl = "https://paytech.sn/payment/checkout/729b3e3021226cd27905";
 
-  bool paymentResult = await (Navigator.push(
+  var paymentResult = await (Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PayTech(paymentUrl)),
-                ) as FutureOr<bool>);
+                ) );
 
  if(paymentResult){
     Scaffold.of(context).showSnackBar(new SnackBar(
