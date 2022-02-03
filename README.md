@@ -36,16 +36,13 @@ onPressed: () async{
                   MaterialPageRoute(builder: (context) => PayTech(paymentUrl)),
                 ) );
 
- if(paymentResult){
-    Scaffold.of(context).showSnackBar(new SnackBar(
-        content: Text("Payment success")
-    ));
-  }
-  else{
-    Scaffold.of(context).showSnackBar(new SnackBar(
-        content: Text("Payment failed")
-    ));
-  }
+    if(paymentResult)
+    {
+        print("Payment success");
+    }
+   else{
+    print("Payment failed");
+    }
 },
 ```
 

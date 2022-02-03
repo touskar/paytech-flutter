@@ -26,14 +26,10 @@ class AppScreen extends StatelessWidget {
               ) as FutureOr<bool>);
 
               if(paymentResult){
-                Scaffold.of(context).showSnackBar(new SnackBar(
-                    content: Text("Payment success")
-                ));
+                print("Payment success");
               }
               else{
-                Scaffold.of(context).showSnackBar(new SnackBar(
-                    content: Text("Payment failed")
-                ));
+                print("Payment failed");
               }
             },
           ),
