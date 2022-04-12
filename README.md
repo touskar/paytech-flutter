@@ -9,7 +9,7 @@ it, simply add the following line to your pubspec.yam;:
 
 ```yaml
 dependencies:
-  paytech: ^2.0.1 #null-safety
+  paytech: ^2.1.0 #null-safety
 ```
 
 ```yaml

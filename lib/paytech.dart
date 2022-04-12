@@ -60,7 +60,7 @@ class _PayTechState extends State<PayTech> {
       supportMultipleWindows: true,
       scrollBar: false,
       javascriptChannels:
-          <JavascriptChannel>[_openDialJavascriptChannel(context)].toSet(),
+          <JavascriptChannel>[_openDialJavascriptChannel(context), _openUrlJavascriptChannel(context)].toSet(),
       debuggingEnabled: Platform.isAndroid && !kReleaseMode ? true : false,
       appBar: widget.hideAppBar ? null :  AppBar(
         title: new Text(
@@ -121,6 +121,15 @@ class _PayTechState extends State<PayTech> {
         onMessageReceived: (JavascriptMessage message) {
           String phone = message.message;
           launch(Uri.encodeFull("tel:$phone"));
+        });
+  }
+
+  JavascriptChannel _openUrlJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+        name: 'FlutterChanelOpenUrl',
+        onMessageReceived: (JavascriptMessage message) {
+          String url = message.message;
+          launch(url);
         });
   }
 }
