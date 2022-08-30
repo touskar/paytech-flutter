@@ -1,6 +1,6 @@
 name: paytech
 description: Paytech SDK for flutter
-version: 2.1.0
+version: 3.0.0
 homepage: https://github.com/touskar/paytech-flutter
 
 environment:
@@ -10,8 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  url_launcher: ^5.5.0
-  flutter_webview_plugin: ^0.4.0
+  url_launcher: ^6.0.18
+  flutter_inappwebview: ^5.3.2
   fullscreen: ^1.0.3
 
 dev_dependencies:

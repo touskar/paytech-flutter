@@ -2,14 +2,17 @@
 # PayTech
 
 
+## Requirements
+ minSdkVersion 17
+
 ## Installation
 
-Paytech is available through [pub.dev](https://cocoapods.org). To install
-it, simply add the following line to your pubspec.yam;:
+Paytech is available through [pub.dev]. To install
+it, simply add the following line to your pubspec.yam:
 
 ```yaml
 dependencies:
-  paytech: ^2.1.0 #null-safety
+  paytech: ^3.0.0 #null-safety
 ```
 
 ```yaml
@@ -29,20 +32,25 @@ Import PayTech Module
 Use `Paytech`  widget to make a payment.
 ```dart
 onPressed: () async{
+  /**
+   * Get this Url from Your backend
+   * Your Backend must call https://paytech.sn/api/payment/request-payment to generate a payment token
+   * Set success_url to https://paytech.sn/mobile/success
+   * Set cancel_url to https://paytech.sn/mobile/cancel
+   */
   var paymentUrl = "https://paytech.sn/payment/checkout/729b3e3021226cd27905";
 
-  var paymentResult = await (Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PayTech(paymentUrl)),
-                ) );
+  bool paymentResult = await Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => PayTech(paymentUrl)),
+  ) ;
 
-    if(paymentResult)
-    {
-        print("Payment success");
-    }
-   else{
+  if(paymentResult){
+    print("Payment success");
+  }
+  else{
     print("Payment failed");
-    }
+  }
 },
 ```
 
@@ -65,6 +73,7 @@ You can pass optional additional arguments to PayTech constructor:
 ## Author
 
 Moussa Ndour (moussa.ndour@intech.sn / +221772457199)
+https://discord.gg/Y6ke2MmNGF (paytech channel)
 contact@paytech.sn
 https://intech.sn
 https://paytech.sn

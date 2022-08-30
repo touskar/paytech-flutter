@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:fullscreen/fullscreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,14 +28,16 @@ class PayTech extends StatefulWidget {
 }
 
 class _PayTechState extends State<PayTech> {
-  FlutterWebviewPlugin? flutterWebviewPlugin;
+  final GlobalKey webViewKey = GlobalKey();
+  InAppWebViewController? webViewController;
+  late InAppWebViewGroupOptions options;
 
   bool onClosing = false;
 
   @override
   void initState() {
-    _initcontroller();
     super.initState();
+    initWebView();
 
     if(widget.hideAppBar){
      // WidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +46,7 @@ class _PayTechState extends State<PayTech> {
 
   }
 
+
   @override
   Widget build(BuildContext context) {
     /*if(widget.hideAppBar){
@@ -51,20 +54,11 @@ class _PayTechState extends State<PayTech> {
       SystemChrome.setEnabledSystemUIOverlays([]);
     }*/
 
-    return new WebviewScaffold(
-      url: widget.paymentUrl,
-      hidden: false,
-      withLocalStorage: true,
-      withJavascript: true,
-      useWideViewPort: true,
-      supportMultipleWindows: true,
-      scrollBar: false,
-      javascriptChannels:
-          <JavascriptChannel>[_openDialJavascriptChannel(context), _openUrlJavascriptChannel(context)].toSet(),
-      debuggingEnabled: Platform.isAndroid && !kReleaseMode ? true : false,
+
+    return Scaffold(
       appBar: widget.hideAppBar ? null :  AppBar(
         title: new Text(
-            widget.appBarTitle,
+          widget.appBarTitle,
           style: widget.appBarTextStyle,
         ),
         backgroundColor: widget.appBarBgColor,
@@ -77,59 +71,101 @@ class _PayTechState extends State<PayTech> {
           },
         ),
       ),
+      body: Container(
+        child: InAppWebView(
+          key: webViewKey,
+          initialUrlRequest: URLRequest(url: Uri.parse(widget.paymentUrl)),
+          initialOptions: options,
+          onWebViewCreated: (controller) {
+            webViewController = controller;
+            onWebViewCreated(controller);
+          },
+          onLoadStart: (controller, url) {
+              this.onLoadStart(controller, url?.toString() ?? '');
+          },
+          androidOnPermissionRequest: (controller, origin, resources) async {
+            return PermissionRequestResponse(
+                resources: resources,
+                action: PermissionRequestResponseAction.GRANT);
+          },
+          shouldOverrideUrlLoading: (controller, navigationAction) async {
+            var uri = navigationAction.request.url;
+            return NavigationActionPolicy.ALLOW;
+          },
+          onLoadStop: (controller, url) async {
+              this.onLoadStop(controller, url?.toString() ?? '');
+          },
+          onConsoleMessage: (controller, consoleMessage) {
+            print(consoleMessage);
+          },
+
+        ),
+      ),
     );
   }
 
-  void _initcontroller() {
-    flutterWebviewPlugin = new FlutterWebviewPlugin();
 
-   flutterWebviewPlugin!.onUrlChanged.listen((String url) {
-      if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
-        bool result = url.contains("success") ? true : false;
-        _close(result);
-      }
-    });
+  void initWebView() {
 
 
+    options = InAppWebViewGroupOptions(
+      crossPlatform: InAppWebViewOptions(
+        useShouldOverrideUrlLoading: true,
+        mediaPlaybackRequiresUserGesture: false,
+        javaScriptEnabled: true,
+        allowUniversalAccessFromFileURLs: true,
+        allowFileAccessFromFileURLs: true,
+        javaScriptCanOpenWindowsAutomatically: true,
 
-    flutterWebviewPlugin!.onStateChanged.listen((WebViewStateChanged state) {
-      String url = state.url;
-      if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
+      ),
+      android: AndroidInAppWebViewOptions(
+          useHybridComposition: true,
+          loadWithOverviewMode: false,
+          useWideViewPort: false
+      ),
+      ios: IOSInAppWebViewOptions(
+        allowsInlineMediaPlayback: true,
+        enableViewportScale: true,
+      ),
 
-        bool result = url.contains("success") ? true : false;
-        _close(result);
-      }
-    });
+    );
+
   }
+
 
   void _close(bool success) async{
     if(!onClosing){
       onClosing  = true;
-      flutterWebviewPlugin?.close();
+      //webViewController.close();
       Navigator.of(context).pop(success);
       await FullScreen.exitFullScreen();
-
-
     }
-
-    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
-  JavascriptChannel _openDialJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'FlutterChanelOpenDial',
-        onMessageReceived: (JavascriptMessage message) {
-          String phone = message.message;
-          launch(Uri.encodeFull("tel:$phone"));
-        });
+
+  void onLoadStop(InAppWebViewController controller, String url) {
+    if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
+      bool result = url.contains("success") ? true : false;
+      _close(result);
+    }
   }
 
-  JavascriptChannel _openUrlJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'FlutterChanelOpenUrl',
-        onMessageReceived: (JavascriptMessage message) {
-          String url = message.message;
-          launch(url);
-        });
+  void onLoadStart(InAppWebViewController controller, String url) {
+    if (url.contains(MOBILE_SUCCESS_URL) || url.contains(MOBILE_CANCEL_URL)) {
+      bool result = url.contains("success") ? true : false;
+      _close(result);
+    }
+  }
+
+  void onWebViewCreated(InAppWebViewController controller) {
+    controller.addJavaScriptHandler(handlerName: 'FlutterChanelOpenUrl', callback: (args) {
+      String url = args[0].toString();
+      launch(url);
+    });
+
+    controller.addJavaScriptHandler(handlerName: 'FlutterChanelOpenDial', callback: (args) {
+      String phone = args[0].toString();
+      launch(Uri.encodeFull("tel:$phone"));
+    });
   }
 }
