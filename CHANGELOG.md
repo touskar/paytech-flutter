@@ -1,4 +1,4 @@
-## [3.0.0] - 20-AUG-2022.
+## [3.0.1] - 20-AUG-2022.
 
 * Change WebView Engine
 * Set minSdkVersion 17 for Android
