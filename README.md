@@ -4,6 +4,7 @@
 
 ## Requirements
  minSdkVersion 17
+ compileSdkVersion <= 32
 
 ## Installation
 
