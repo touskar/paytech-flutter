@@ -50,7 +50,6 @@ class _PayTechState extends State<PayTech> {
           onWebResourceError: (WebResourceError error) {},
         ),
       )
-      ..platform
       ..loadRequest(Uri.parse(widget.paymentUrl));
     super.initState();
   }
