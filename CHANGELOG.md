@@ -1,3 +1,7 @@
+## [4.0.0] - 07-JUN-2023.
+
+* Upgrade flutter latest and package
+
 ## [3.0.2] - 20-AUG-2022.
 
 * Change WebView Engine
