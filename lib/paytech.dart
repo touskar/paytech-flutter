@@ -1,8 +1,5 @@
 library paytech;
 
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -34,11 +31,11 @@ class _PayTechState extends State<PayTech> {
   bool onClosing = false;
 
   void gotoFullscreen() {
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   void exitFullscreen() {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
   @override
@@ -95,7 +92,7 @@ class _PayTechState extends State<PayTech> {
                 action: PermissionRequestResponseAction.GRANT);
           },
           shouldOverrideUrlLoading: (controller, navigationAction) async {
-            var uri = navigationAction.request.url;
+            //var uri = navigationAction.request.url;
             return NavigationActionPolicy.ALLOW;
           },
           onLoadStop: (controller, url) async {
@@ -169,12 +166,16 @@ class _PayTechState extends State<PayTech> {
   void onWebViewCreated(InAppWebViewController controller) {
     controller.addJavaScriptHandler(handlerName: 'FlutterChanelOpenUrl', callback: (args) {
       String url = args[0].toString();
-      launch(url);
+      print("FlutterChanelOpenUrl Call");
+      launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     });
 
     controller.addJavaScriptHandler(handlerName: 'FlutterChanelOpenDial', callback: (args) {
       String phone = args[0].toString();
-      launch(Uri.encodeFull("tel:$phone"));
+      print("FlutterChanelOpenDial Call");
+      String encodedPhone = Uri.encodeComponent(phone);
+      Uri phoneUri = Uri(scheme: 'tel', path: encodedPhone);
+      launchUrl(phoneUri, mode: LaunchMode.externalApplication);
     });
   }
 }

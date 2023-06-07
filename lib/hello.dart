@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:paytech/paytech.dart';
 
 class AppScreen extends StatelessWidget {
