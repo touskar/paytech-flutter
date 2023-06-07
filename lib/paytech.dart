@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:fullscreen/fullscreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const MOBILE_CANCEL_URL = "https://paytech.sn/mobile/cancel";
@@ -34,14 +33,21 @@ class _PayTechState extends State<PayTech> {
 
   bool onClosing = false;
 
+  void gotoFullscreen() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+  }
+
+  void exitFullscreen() {
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  }
+
   @override
   void initState() {
     super.initState();
     initWebView();
 
     if(widget.hideAppBar){
-     // WidgetsFlutterBinding.ensureInitialized();
-       FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
+      gotoFullscreen();
     }
 
   }
@@ -138,7 +144,10 @@ class _PayTechState extends State<PayTech> {
       onClosing  = true;
       //webViewController.close();
       Navigator.of(context).pop(success);
-      await FullScreen.exitFullScreen();
+
+      if(widget.hideAppBar){
+        exitFullscreen();
+      }
     }
   }
 

@@ -15,7 +15,7 @@ class AppScreen extends StatelessWidget {
       ),
       body: Center(
         child: Builder(
-          builder: (context) =>  RaisedButton(
+          builder: (context) =>  ElevatedButton(
             child: Text('Make Payment'),
             onPressed: () async{
               var paymentUrl = "https://paytech.sn/payment/checkout/729b3e3021226cd27905";

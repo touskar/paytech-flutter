@@ -1,15 +1,15 @@
 
 # PayTech
 
-
-## Requirements
- minSdkVersion 17
- compileSdkVersion <= 32
-
 ## Installation
 
 Paytech is available through [pub.dev]. To install
 it, simply add the following line to your pubspec.yam:
+
+```yaml
+dependencies:
+  paytech: ^4.0.0 #flutter latest
+```
 
 ```yaml
 dependencies:
