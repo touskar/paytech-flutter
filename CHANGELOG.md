@@ -1,3 +1,7 @@
+## [4.0.1] - 09-AUG-2023.
+
+* Upgrade documentation
+
 ## [4.0.0] - 07-JUN-2023.
 
 * Upgrade flutter latest and package

@@ -21,6 +21,29 @@ dependencies:
   paytech: ^0.1.2 #no null-safety support
 ```
 
+## IMPORTANT
+When making a request to `https://paytech.sn/api/payment/request-payment`, you should set the `success_url` and `cancel_url` fields to the respective values:
+- ```https://paytech.sn/mobile/success``` for the success URL, and
+- ```https://paytech.sn/mobile/cancel``` for the cancel URL.
+
+```
+
+{
+    "item_name":  "Business plane ticket Paris-Dakar",
+    "item_price":  560000,
+    "currency":  "XOF",
+    "ref_command":  "RV3Q2LDUQ0FMP9F2EV2OFU8WV2K2VBZFED5R0QQO33IXSVTHSK48LD9GHXCO79",
+    "command_name":  "Purchase of three Paris Dakar business plane tickets for John Mcarty",
+    "ipn_url":  "https://partner-domaine.com/api/ipn_callback",
+    "success_url":  "https://paytech.sn/mobile/success", //here
+    "cancel_url":  "https://paytech.sn/mobile/cancel", //here
+    "custom_field":  "some_serialized_data"
+}
+```
+
+Doing this will enable the plugin to handle the events accordingly.
+
+
 ## Example
 
 To run the example project, clone the repo, and run `flutter pub  get` from the Example directory first.
