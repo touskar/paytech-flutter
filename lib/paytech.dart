@@ -1,5 +1,7 @@
 library paytech;
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -26,7 +28,7 @@ class PayTech extends StatefulWidget {
 class _PayTechState extends State<PayTech> {
   final GlobalKey webViewKey = GlobalKey();
   InAppWebViewController? webViewController;
-  late InAppWebViewGroupOptions options;
+  late InAppWebViewSettings options;
 
   bool onClosing = false;
 
@@ -77,8 +79,16 @@ class _PayTechState extends State<PayTech> {
       body: Container(
         child: InAppWebView(
           key: webViewKey,
-          initialUrlRequest: URLRequest(url: Uri.parse(widget.paymentUrl)),
-          initialOptions: options,
+          initialUrlRequest: URLRequest(url: WebUri(widget.paymentUrl)),
+          initialSettings: options,
+          shouldAllowDeprecatedTLS: (controller, challenge) async {
+            // Always allow deprecated TLS certificates
+            return ShouldAllowDeprecatedTLSAction.ALLOW;
+          },
+          onReceivedServerTrustAuthRequest: (controller, challenge) async {
+            // Example: Allow all certificates (not recommended for production)
+            return  ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
+          },
           onWebViewCreated: (controller) {
             webViewController = controller;
             onWebViewCreated(controller);
@@ -86,10 +96,10 @@ class _PayTechState extends State<PayTech> {
           onLoadStart: (controller, url) {
               this.onLoadStart(controller, url?.toString() ?? '');
           },
-          androidOnPermissionRequest: (controller, origin, resources) async {
-            return PermissionRequestResponse(
-                resources: resources,
-                action: PermissionRequestResponseAction.GRANT);
+          onPermissionRequest: (controller, request) async {
+            return PermissionResponse(
+                resources: request.resources,
+                action: PermissionResponseAction.GRANT);
           },
           shouldOverrideUrlLoading: (controller, navigationAction) async {
             //var uri = navigationAction.request.url;
@@ -111,26 +121,138 @@ class _PayTechState extends State<PayTech> {
   void initWebView() {
 
 
-    options = InAppWebViewGroupOptions(
-      crossPlatform: InAppWebViewOptions(
-        useShouldOverrideUrlLoading: true,
-        mediaPlaybackRequiresUserGesture: false,
-        javaScriptEnabled: true,
-        allowUniversalAccessFromFileURLs: true,
-        allowFileAccessFromFileURLs: true,
-        javaScriptCanOpenWindowsAutomatically: true,
-
-      ),
-      android: AndroidInAppWebViewOptions(
-          useHybridComposition: true,
-          loadWithOverviewMode: false,
-          useWideViewPort: false
-      ),
-      ios: IOSInAppWebViewOptions(
-        allowsInlineMediaPlayback: true,
-        enableViewportScale: true,
-      ),
-
+    options =  InAppWebViewSettings(
+      // Cross-platform settings
+      useShouldInterceptRequest: true,
+      useOnLoadResource: true,
+      useOnDownloadStart: false,
+      clearCache: false,
+      userAgent: getUserAgent(),
+      javaScriptEnabled: true,
+      javaScriptCanOpenWindowsAutomatically: true,
+      mediaPlaybackRequiresUserGesture: false,
+      minimumFontSize: 0,
+      verticalScrollBarEnabled: true,
+      horizontalScrollBarEnabled: true,
+      resourceCustomSchemes: [],
+      contentBlockers: [],
+      preferredContentMode: UserPreferredContentMode.RECOMMENDED,
+      useShouldInterceptAjaxRequest: false,
+      interceptOnlyAsyncAjaxRequests: true,
+      useShouldInterceptFetchRequest: false,
+      incognito: false,
+      cacheEnabled: true,
+      transparentBackground: false,
+      disableVerticalScroll: false,
+      disableHorizontalScroll: false,
+      disableContextMenu: false,
+      supportZoom: true,
+      allowFileAccessFromFileURLs: true,
+      allowUniversalAccessFromFileURLs: true,
+      textZoom: 100,
+      clearSessionCache: false,
+      builtInZoomControls: true,
+      displayZoomControls: false,
+      databaseEnabled: true,
+      domStorageEnabled: true,
+      useWideViewPort: true,
+      safeBrowsingEnabled: true,
+      mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW, // Set as appropriate
+      allowContentAccess: true,
+      allowFileAccess: true,
+      blockNetworkImage: false,
+      blockNetworkLoads: false,
+      cacheMode: CacheMode.LOAD_DEFAULT,
+      cursiveFontFamily: "cursive",
+      defaultFixedFontSize: 16,
+      defaultFontSize: 16,
+      defaultTextEncodingName: "UTF-8",
+      fantasyFontFamily: "fantasy",
+      fixedFontFamily: "monospace",
+      forceDark: ForceDark.OFF,
+      forceDarkStrategy: ForceDarkStrategy.PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING,
+      geolocationEnabled: true,
+      layoutAlgorithm: LayoutAlgorithm.NORMAL,
+      loadWithOverviewMode: true,
+      loadsImagesAutomatically: true,
+      minimumLogicalFontSize: 8,
+      needInitialFocus: true,
+      offscreenPreRaster: false,
+      sansSerifFontFamily: "sans-serif",
+      serifFontFamily: "sans-serif",
+      standardFontFamily: "sans-serif",
+      saveFormData: true,
+      thirdPartyCookiesEnabled: true,
+      hardwareAcceleration: true,
+      initialScale: 0,
+      supportMultipleWindows: false,
+      useHybridComposition: true,
+      useOnRenderProcessGone: false,
+      overScrollMode: OverScrollMode.IF_CONTENT_SCROLLS,
+      networkAvailable: true, // Example value
+      scrollBarStyle: ScrollBarStyle.SCROLLBARS_INSIDE_OVERLAY,
+      verticalScrollbarPosition: VerticalScrollbarPosition.SCROLLBAR_POSITION_DEFAULT,
+      scrollBarDefaultDelayBeforeFade: 1000,
+      scrollbarFadingEnabled: true,
+      disableDefaultErrorPage: false,
+      verticalScrollbarThumbColor: Colors.grey,
+      verticalScrollbarTrackColor: Colors.black,
+      horizontalScrollbarThumbColor: Colors.grey,
+      horizontalScrollbarTrackColor: Colors.black,
+      algorithmicDarkeningAllowed: false,
+      enterpriseAuthenticationAppLinkPolicyEnabled: true,
+      //  defaultVideoPoster: '',
+     // requestedWithHeaderOriginAllowList: [],
+      disallowOverScroll: false,
+      enableViewportScale: false,
+      suppressesIncrementalRendering: false,
+      allowsAirPlayForMediaPlayback: true,
+      allowsBackForwardNavigationGestures: true,
+      allowsLinkPreview: true,
+      ignoresViewportScaleLimits: false,
+      allowsInlineMediaPlayback: true,
+      allowsPictureInPictureMediaPlayback: true,
+      isFraudulentWebsiteWarningEnabled: true,
+      selectionGranularity: SelectionGranularity.DYNAMIC,
+      dataDetectorTypes: [DataDetectorTypes.NONE],
+      sharedCookiesEnabled: false,
+      automaticallyAdjustsScrollIndicatorInsets: false,
+      accessibilityIgnoresInvertColors: false,
+      decelerationRate: ScrollViewDecelerationRate.NORMAL,
+      alwaysBounceVertical: false,
+      alwaysBounceHorizontal: false,
+      scrollsToTop: true,
+      isPagingEnabled: false,
+      maximumZoomScale: 1.0,
+      minimumZoomScale: 1.0,
+      contentInsetAdjustmentBehavior: ScrollViewContentInsetAdjustmentBehavior.NEVER,
+      isDirectionalLockEnabled: false,
+     // mediaType: MediaType.ALL,
+      pageZoom: 1.0,
+      limitsNavigationsToAppBoundDomains: false,
+      useOnNavigationResponse: false,
+      applePayAPIEnabled: false,
+     // allowingReadAccessTo: [],
+      disableLongPressContextMenuOnLinks: false,
+      disableInputAccessoryView: false,
+      underPageBackgroundColor: Colors.transparent,
+      isTextInteractionEnabled: true,
+      isSiteSpecificQuirksModeEnabled: true,
+      upgradeKnownHostsToHTTPS: true,
+      isElementFullscreenEnabled: true,
+      isFindInteractionEnabled: false,
+      minimumViewportInset: EdgeInsets.all(0),
+      maximumViewportInset: EdgeInsets.all(0),
+      isInspectable: false,
+      shouldPrintBackgrounds: false,
+      allowBackgroundAudioPlaying: false,
+      webViewAssetLoader: null,
+      iframeAllow: "*",
+      iframeAllowFullscreen: true,
+     // iframeSandbox: [],
+      iframeReferrerPolicy: ReferrerPolicy.NO_REFERRER,
+      iframeName: "",
+      iframeCsp: "",
     );
 
   }
@@ -177,5 +299,16 @@ class _PayTechState extends State<PayTech> {
       Uri phoneUri = Uri(scheme: 'tel', path: encodedPhone);
       launchUrl(phoneUri, mode: LaunchMode.externalApplication);
     });
+  }
+
+  String getUserAgent() {
+    if (Platform.isIOS) {
+      return "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1/PayTech";
+    } else if (Platform.isAndroid) {
+      // User Agent for Android
+      return "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36/PayTech";
+    }
+
+    return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36/PayTech";
   }
 }

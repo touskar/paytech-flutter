@@ -1,3 +1,8 @@
+## [5.0.0] - 24-JUL-2024.
+
+* upgrade to latest version of flutter
+* fixe bad ca rejection for some bank 3dsecure domain
+
 ## [4.0.1] - 09-AUG-2023.
 
 * Upgrade documentation
