@@ -33,11 +33,11 @@ class _PayTechState extends State<PayTech> {
   bool onClosing = false;
 
   void gotoFullscreen() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   }
 
   void exitFullscreen() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
   @override
@@ -46,7 +46,7 @@ class _PayTechState extends State<PayTech> {
     initWebView();
 
     if(widget.hideAppBar){
-      gotoFullscreen();
+     gotoFullscreen();
     }
 
   }
@@ -54,10 +54,20 @@ class _PayTechState extends State<PayTech> {
 
   @override
   Widget build(BuildContext context) {
-    /*if(widget.hideAppBar){
-      WidgetsFlutterBinding.ensureInitialized();
-      SystemChrome.setEnabledSystemUIOverlays([]);
-    }*/
+    print("seting chrome");
+    if(!widget.hideAppBar){
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: widget.appBarBgColor,
+        // Color for Android
+        statusBarBrightness: Brightness.dark,
+        // Dark == white status bar -- for IOS.
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: widget.appBarBgColor
+      ));
+    }
+    else{
+
+    }
 
 
     return Scaffold(
@@ -77,41 +87,46 @@ class _PayTechState extends State<PayTech> {
         ),
       ),
       body: Container(
-        child: InAppWebView(
-          key: webViewKey,
-          initialUrlRequest: URLRequest(url: WebUri(widget.paymentUrl)),
-          initialSettings: options,
-          shouldAllowDeprecatedTLS: (controller, challenge) async {
-            // Always allow deprecated TLS certificates
-            return ShouldAllowDeprecatedTLSAction.ALLOW;
-          },
-          onReceivedServerTrustAuthRequest: (controller, challenge) async {
-            // Example: Allow all certificates (not recommended for production)
-            return  ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
-          },
-          onWebViewCreated: (controller) {
-            webViewController = controller;
-            onWebViewCreated(controller);
-          },
-          onLoadStart: (controller, url) {
-              this.onLoadStart(controller, url?.toString() ?? '');
-          },
-          onPermissionRequest: (controller, request) async {
-            return PermissionResponse(
-                resources: request.resources,
-                action: PermissionResponseAction.GRANT);
-          },
-          shouldOverrideUrlLoading: (controller, navigationAction) async {
-            //var uri = navigationAction.request.url;
-            return NavigationActionPolicy.ALLOW;
-          },
-          onLoadStop: (controller, url) async {
-              this.onLoadStop(controller, url?.toString() ?? '');
-          },
-          onConsoleMessage: (controller, consoleMessage) {
-            print(consoleMessage);
-          },
+        color: widget.hideAppBar ? widget.appBarBgColor.withOpacity(0.5) : Colors.transparent,
+        child: SafeArea(
+          child: Container(
+            child: InAppWebView(
+              key: webViewKey,
+              initialUrlRequest: URLRequest(url: WebUri(widget.paymentUrl)),
+              initialSettings: options,
+              shouldAllowDeprecatedTLS: (controller, challenge) async {
+                // Always allow deprecated TLS certificates
+                return ShouldAllowDeprecatedTLSAction.ALLOW;
+              },
+              onReceivedServerTrustAuthRequest: (controller, challenge) async {
+                // Example: Allow all certificates (not recommended for production)
+                return  ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
+              },
+              onWebViewCreated: (controller) {
+                webViewController = controller;
+                onWebViewCreated(controller);
+              },
+              onLoadStart: (controller, url) {
+                  this.onLoadStart(controller, url?.toString() ?? '');
+              },
+              onPermissionRequest: (controller, request) async {
+                return PermissionResponse(
+                    resources: request.resources,
+                    action: PermissionResponseAction.GRANT);
+              },
+              shouldOverrideUrlLoading: (controller, navigationAction) async {
+                //var uri = navigationAction.request.url;
+                return NavigationActionPolicy.ALLOW;
+              },
+              onLoadStop: (controller, url) async {
+                  this.onLoadStop(controller, url?.toString() ?? '');
+              },
+              onConsoleMessage: (controller, consoleMessage) {
+                print(consoleMessage);
+              },
 
+            ),
+          ),
         ),
       ),
     );
