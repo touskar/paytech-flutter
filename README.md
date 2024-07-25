@@ -60,9 +60,9 @@ Use `Paytech` widget to make a payment.
 onPressed: () async{  
  /** * Get this Url from Your backend * Your Backend must call https://paytech.sn/api/payment/request-payment to generate a payment token * Set success_url to https://paytech.sn/mobile/success * Set cancel_url to https://paytech.sn/mobile/cancel */ var paymentUrl = "https://paytech.sn/payment/checkout/729b3e3021226cd27905";  
  
- bool paymentResult = await Navigator.push( context, MaterialPageRoute(builder: (context) => PayTech(paymentUrl)), ) ;  
+ bool? paymentResult = await Navigator.push( context, MaterialPageRoute(builder: (context) => PayTech(paymentUrl)), ) ;  
  
- if(paymentResult){ print("Payment success"); } else{ print("Payment failed"); }},  
+ if(paymentResult == true){ print("Payment success"); } else{ print("Payment failed"); }},  
 ```  
 
 
