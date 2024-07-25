@@ -1,3 +1,7 @@
+## [5.0.2] - 24-JUL-2024.
+
+* fixe android dependency missing
+
 ## [5.0.1] - 24-JUL-2024.
 
 * upgrade to latest version of flutter

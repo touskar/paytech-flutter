@@ -9,7 +9,10 @@ it, simply add the following line to your pubspec.yam:
 
 ```yaml  
 dependencies:  
- paytech: ^5.0.1 #latest flutter version( compileSdkVersion 34 for Android)  
+ paytech: ^5.0.2 #latest flutter version( compileSdkVersion 34 for Android)  
+
+dependency_overrides:
+  webview_flutter_android: 3.16.1
 ```  
 
 ```yaml  
@@ -80,7 +83,7 @@ You can pass optional additional arguments to PayTech constructor:
  }  
 ```  
 
-## Web support (only for > paytech 5.0.1)
+## Web support (only for > paytech 5.0.2)
 Update web/index.html  
 For the web platform, you need to include the web_support.js file provided by the plugin in your web/index.html file. This file helps in initializing the WebView for Flutter Web.
 
