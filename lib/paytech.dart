@@ -87,7 +87,7 @@ class _PayTechState extends State<PayTech> {
         ),
       ),
       body: Container(
-        color: widget.hideAppBar ? widget.appBarBgColor.withOpacity(0.8) : Colors.transparent,
+        color: widget.hideAppBar ? widget.appBarBgColor.withOpacity(0.9) : Colors.transparent,
         child: SafeArea(
           child: Container(
             child: InAppWebView(
